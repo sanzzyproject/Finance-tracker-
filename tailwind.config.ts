@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  darkMode: "class", // PENTING: Agar tombol toggle dark mode berfungsi
+  darkMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,10 +10,11 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        background: "#09090B", // Zinc-950 (Very Dark Matte)
+        card: "#18181B",       // Zinc-900 (Surface)
+        border: "#27272A",     // Zinc-800 (Subtle Border)
+        primary: "#D9F154",    // Solid Lime (Modern Fintech Color)
       },
     },
   },
