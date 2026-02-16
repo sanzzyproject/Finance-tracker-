@@ -1,5 +1,5 @@
 import { formatCurrency } from '@/lib/utils';
-import { Wallet } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 
 interface Props {
   expense: number;
@@ -10,40 +10,42 @@ export default function BudgetCard({ expense, limit = 5000000 }: Props) {
   const percentage = Math.min(Math.round((expense / limit) * 100), 100);
 
   return (
-    <div className="px-6 mb-8">
-      {/* Neon Gradient Border Effect */}
-      <div className="relative p-[1px] rounded-[32px] bg-gradient-to-br from-blue-500 via-purple-500 to-cyan-500 overflow-hidden shadow-2xl shadow-blue-900/20">
-        <div className="bg-[#101423] rounded-[31px] p-6 relative overflow-hidden">
-          
-          {/* Background Abstract Glow */}
-          <div className="absolute -right-10 -top-10 w-40 h-40 bg-blue-600/20 rounded-full blur-3xl"></div>
-          <div className="absolute -left-10 bottom-0 w-32 h-32 bg-purple-600/10 rounded-full blur-3xl"></div>
+    <div className="px-6 py-4 shrink-0">
+      <div className="bg-card rounded-[28px] p-6 border border-border relative overflow-hidden group">
+        
+        {/* Decorative subtle background circle */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
 
-          <div className="flex justify-between items-start mb-6 relative z-10">
-            <div>
-              <p className="text-slate-400 text-xs font-medium tracking-wider mb-1">TOTAL PENGELUARAN</p>
-              <h2 className="text-3xl font-bold text-white tracking-tight">{formatCurrency(expense)}</h2>
-            </div>
-            <div className="bg-slate-800/50 p-2 rounded-xl backdrop-blur-sm border border-slate-700/50">
-               <Wallet className="text-blue-400" size={20} />
-            </div>
+        <div className="flex justify-between items-start mb-6">
+          <span className="bg-white/5 text-zinc-300 px-3 py-1 rounded-full text-[10px] font-medium border border-white/5">
+            Main Wallet
+          </span>
+          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-black">
+            <ArrowUpRight size={16} />
           </div>
-
-          {/* Modern Progress Bar */}
-          <div className="relative z-10">
-            <div className="flex justify-between text-xs mb-2">
-              <span className="text-slate-400">Limit: {formatCurrency(limit)}</span>
-              <span className="text-blue-400 font-bold">{percentage}%</span>
-            </div>
-            <div className="w-full bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700/50">
-              <div 
-                className="h-full rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000 ease-out" 
-                style={{ width: `${percentage}%` }}
-              ></div>
-            </div>
-          </div>
-
         </div>
+
+        <div className="mb-6">
+           <p className="text-zinc-400 text-xs font-medium mb-1">Total Balance</p>
+           <h2 className="text-3xl font-bold text-white tracking-tight">
+             {formatCurrency(expense)}
+           </h2>
+        </div>
+
+        {/* Progress Minimalis */}
+        <div>
+          <div className="flex justify-between text-[10px] text-zinc-500 mb-2 font-medium uppercase tracking-wider">
+            <span>Monthly Budget</span>
+            <span className="text-white">{percentage}%</span>
+          </div>
+          <div className="w-full bg-zinc-800 h-2 rounded-full overflow-hidden">
+            <div 
+              className="h-full rounded-full bg-primary transition-all duration-700 ease-out" 
+              style={{ width: `${percentage}%` }}
+            ></div>
+          </div>
+        </div>
+
       </div>
     </div>
   );
