@@ -8,7 +8,6 @@ import AddTransactionModal from '@/components/AddTransactionModal';
 import BottomNav from '@/components/BottomNav';
 import { Transaction } from '@/types/finance';
 import { addTransaction, getTransactions, deleteTransaction } from '@/lib/db';
-import { formatCurrency } from '@/lib/utils';
 
 export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -43,35 +42,42 @@ export default function Home() {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto no-scrollbar relative h-full bg-[#0B0F19]">
+    <main className="flex flex-col h-full relative bg-background">
       
+      {/* 1. BAGIAN ATAS (FIXED / NON-SCROLL) */}
+      {/* Hanya muncul di tab Home */}
       {activeTab === 'home' && (
-        <div className="animate-in fade-in duration-300 pb-24">
+        <div className="shrink-0 z-10 bg-background border-b border-border/0 pb-2">
           <Header />
-          
-          <div className="px-6 mb-4">
-            <p className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">Total Saldo</p>
-            <h1 className="text-4xl font-extrabold text-white tracking-tight">{formatCurrency(stats.total)}</h1>
-          </div>
-
           <BudgetCard expense={stats.expense} limit={5000000} />
+          
+          {/* Judul List Transaksi (Sticky effect visual) */}
+          <div className="px-6 mt-4 flex justify-between items-end">
+             <h3 className="font-semibold text-white text-base">Recent Transactions</h3>
+             <button className="text-[10px] text-primary hover:underline">View All</button>
+          </div>
+        </div>
+      )}
 
+      {/* 2. BAGIAN BAWAH (SCROLLABLE AREA) */}
+      <div className="flex-1 overflow-y-auto no-scrollbar relative">
+        {activeTab === 'home' && (
           <ActivityList 
             transactions={transactions} 
             onDelete={handleDelete} 
           />
-        </div>
-      )}
+        )}
 
-      {activeTab === 'stats' && (
-        <SpendingAnalysis transactions={transactions} />
-      )}
-
-      {/* Credit Footer */}
-      <div className="w-full text-center py-4 text-[10px] text-slate-600 absolute bottom-0 left-0 right-0 pointer-events-none z-0">
-        Engineered by <span className="font-bold text-slate-500">SANN404 FORUM</span>
+        {activeTab === 'stats' && (
+          <div className="h-full overflow-y-auto pb-24">
+             {/* Header khusus stats jika perlu, atau gunakan Header umum */}
+             <div className="pt-8"><Header /></div>
+             <SpendingAnalysis transactions={transactions} />
+          </div>
+        )}
       </div>
 
+      {/* 3. NAVIGATION (FIXED) */}
       <BottomNav 
         currentTab={activeTab} 
         onTabChange={setActiveTab} 
