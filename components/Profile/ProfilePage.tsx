@@ -23,8 +23,9 @@ export default function ProfilePage() {
       <div className="flex flex-col items-center mt-2 mb-8 shrink-0">
         <div className="relative">
           <div className="w-28 h-28 rounded-full border-2 border-zinc-800 overflow-hidden relative">
+             {/* Pastikan file foto ada di folder public */}
              <img 
-               src="ae37854e0fddd035f48e05e5a0b63a37.jpg" 
+               src="/ae37854e0fddd035f48e05e5a0b63a37.jpg" 
                alt="Profile"
                className="w-full h-full object-cover"
              />
@@ -134,9 +135,15 @@ export default function ProfilePage() {
                     Bergabung dengan komunitas kami untuk mendapatkan update terbaru, tips keuangan, dan berdiskusi dengan member lainnya.
                  </p>
                  
-                 <button className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 group-hover:border-primary/50 group-hover:text-primary">
+                 {/* TOMBOL GABUNG YANG SUDAH DIGANTI LINK */}
+                 <a 
+                    href="https://whatsapp.com/channel/0029Vb6ukqnHQbS4mKP0j80L"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full py-3 bg-zinc-900 hover:bg-zinc-800 text-white border border-zinc-700 rounded-xl font-bold text-sm transition-all flex items-center justify-center gap-2 group-hover:border-primary/50 group-hover:text-primary cursor-pointer"
+                 >
                     <ExternalLink size={16} /> Gabung Sekarang
-                 </button>
+                 </a>
              </div>
           </div>
         )}
