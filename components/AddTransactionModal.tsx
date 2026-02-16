@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Transaction, TransactionType } from '@/types/finance';
-import { X, ChevronDown } from 'lucide-react';
+import { X, ChevronDown, Check } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -32,61 +32,62 @@ export default function AddTransactionModal({ isOpen, onClose, onSave }: Props) 
   };
 
   return (
-    <div className="absolute inset-0 z-50 flex flex-col bg-white animate-in slide-in-from-bottom-10 duration-300">
-      {/* Header Modal */}
-      <div className="px-6 py-6 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-slate-900">Tambah Transaksi</h2>
-        <button onClick={onClose} className="text-slate-400 hover:text-slate-800 font-medium text-sm">
-          Cancel
+    <div className="absolute inset-0 z-50 flex flex-col bg-[#0B0F19] animate-in slide-in-from-bottom-20 duration-300">
+      {/* Header */}
+      <div className="px-6 py-6 flex justify-between items-center border-b border-slate-800">
+        <h2 className="text-lg font-bold text-white">Transaksi Baru</h2>
+        <button onClick={onClose} className="p-2 bg-slate-800 rounded-full text-slate-400 hover:text-white">
+          <X size={18} />
         </button>
       </div>
 
-      <form onSubmit={handleSubmit} className="flex-1 px-6 flex flex-col">
-        {/* Toggle Type (Segmented Control) */}
-        <div className="bg-slate-100 p-1 rounded-full flex mb-8">
+      <form onSubmit={handleSubmit} className="flex-1 px-6 pt-6 flex flex-col">
+        {/* Toggle Type */}
+        <div className="grid grid-cols-2 gap-4 mb-8 bg-[#151A2D] p-1.5 rounded-2xl border border-slate-800">
           <button
             type="button"
             onClick={() => setType('expense')}
-            className={`flex-1 py-3 rounded-full text-sm font-bold transition-all ${
-              type === 'expense' ? 'bg-[#0d9488] text-white shadow-md' : 'text-slate-500'
+            className={`py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              type === 'expense' ? 'bg-red-500/10 text-red-500 border border-red-500/50' : 'text-slate-500'
             }`}
           >
             Pengeluaran
+            {type === 'expense' && <Check size={14} />}
           </button>
           <button
             type="button"
             onClick={() => setType('income')}
-            className={`flex-1 py-3 rounded-full text-sm font-bold transition-all ${
-              type === 'income' ? 'bg-[#0d9488] text-white shadow-md' : 'text-slate-500'
+            className={`py-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2 ${
+              type === 'income' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/50' : 'text-slate-500'
             }`}
           >
             Pemasukan
+            {type === 'income' && <Check size={14} />}
           </button>
         </div>
 
-        {/* Amount Input */}
-        <div className="mb-6">
-          <label className="block text-xs font-semibold text-slate-400 mb-2">AMOUNT</label>
-          <div className="relative">
-            <input 
-              type="number" 
-              required
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              className="w-full text-3xl font-bold text-slate-900 placeholder-slate-200 outline-none border-b border-slate-100 pb-3 bg-transparent focus:border-[#0d9488] transition-colors"
-              placeholder="0.00"
-            />
-          </div>
+        {/* Input Amount */}
+        <div className="mb-8">
+          <label className="text-xs text-slate-500 font-bold mb-2 block tracking-wider">NOMINAL (RP)</label>
+          <input 
+            type="number" 
+            required
+            autoFocus
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            className="w-full bg-transparent text-4xl font-bold text-white placeholder-slate-700 outline-none border-b-2 border-slate-800 focus:border-blue-500 pb-2 transition-colors"
+            placeholder="0"
+          />
         </div>
 
-        {/* Category Input */}
-        <div className="mb-6">
-          <label className="block text-xs font-semibold text-slate-400 mb-2">CATEGORY</label>
+        {/* Inputs Lain */}
+        <div className="space-y-4 mb-auto">
           <div className="relative">
+            <label className="text-xs text-slate-500 font-bold mb-2 block tracking-wider">KATEGORI</label>
             <select 
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-slate-50 text-slate-800 rounded-2xl p-4 outline-none appearance-none font-bold text-sm border border-slate-100"
+              className="w-full bg-[#151A2D] text-white rounded-xl p-4 outline-none appearance-none font-medium text-sm border border-slate-800 focus:border-slate-600 transition-colors"
             >
               <option>Makanan</option>
               <option>Sewa</option>
@@ -97,26 +98,25 @@ export default function AddTransactionModal({ isOpen, onClose, onSave }: Props) 
               <option>Investasi</option>
               <option>Lainnya</option>
             </select>
-            <ChevronDown className="absolute right-4 top-4 text-slate-400 pointer-events-none" size={20} />
+            <ChevronDown className="absolute right-4 bottom-4 text-slate-400 pointer-events-none" size={18} />
+          </div>
+
+          <div>
+             <label className="text-xs text-slate-500 font-bold mb-2 block tracking-wider">CATATAN</label>
+             <input 
+              type="text" 
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              className="w-full bg-[#151A2D] text-white rounded-xl p-4 outline-none font-medium text-sm border border-slate-800 focus:border-slate-600 transition-colors placeholder-slate-600"
+              placeholder="Keterangan transaksi..."
+            />
           </div>
         </div>
 
-        {/* Description Input */}
-        <div className="mb-auto">
-          <label className="block text-xs font-semibold text-slate-400 mb-2">DESCRIPTION (OPTIONAL)</label>
-          <input 
-            type="text" 
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            className="w-full bg-slate-50 text-slate-800 rounded-2xl p-4 outline-none font-medium text-sm border border-slate-100 placeholder-slate-300"
-            placeholder="Contoh: Belanja Bulanan"
-          />
-        </div>
-
-        {/* Save Button */}
+        {/* Submit */}
         <div className="pb-8 pt-4">
-          <button type="submit" className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl shadow-lg active:scale-[0.98] transition-all">
-            Simpan
+          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-lg shadow-blue-900/50 active:scale-[0.98] transition-all">
+            Simpan Transaksi
           </button>
         </div>
       </form>
