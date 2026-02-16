@@ -6,10 +6,10 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "SANN404 Finance",
-  description: "Premium Dark Fintech UI",
+  description: "Minimalist Fintech",
   manifest: "/manifest.json",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
-  themeColor: "#0B0F19",
+  themeColor: "#09090B",
 };
 
 export default function RootLayout({
@@ -19,9 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="id" className="dark">
-      <body className={`${inter.className} bg-[#020617] min-h-screen flex justify-center overflow-hidden`}>
-        {/* Container Mobile Premium */}
-        <div className="w-full max-w-[420px] bg-[#0B0F19] h-[100dvh] shadow-2xl shadow-black relative flex flex-col border-x border-slate-800/50">
+      <body className={`${inter.className} bg-black min-h-screen flex justify-center items-center overflow-hidden`}>
+        {/* Frame Desktop/Mobile */}
+        <div className="w-full sm:max-w-[420px] bg-background h-[100dvh] sm:h-[95vh] sm:rounded-[32px] shadow-2xl relative flex flex-col border border-border overflow-hidden ring-1 ring-white/10">
           {children}
         </div>
       </body>
