@@ -5,11 +5,11 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Finance Tracker by SANN404",
-  description: "Dibuat oleh SANN404 FORUM",
+  title: "SANN404 Finance",
+  description: "Premium Dark Fintech UI",
   manifest: "/manifest.json",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0",
-  themeColor: "#ffffff",
+  themeColor: "#0B0F19",
 };
 
 export default function RootLayout({
@@ -18,10 +18,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="id">
-      <body className={`${inter.className} bg-gray-50 min-h-screen flex justify-center overflow-hidden`}>
-        {/* Frame Mobile */}
-        <div className="w-full max-w-[420px] bg-white h-[100dvh] shadow-2xl relative flex flex-col">
+    <html lang="id" className="dark">
+      <body className={`${inter.className} bg-[#020617] min-h-screen flex justify-center overflow-hidden`}>
+        {/* Container Mobile Premium */}
+        <div className="w-full max-w-[420px] bg-[#0B0F19] h-[100dvh] shadow-2xl shadow-black relative flex flex-col border-x border-slate-800/50">
           {children}
         </div>
       </body>
