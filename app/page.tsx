@@ -42,25 +42,28 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col h-full relative bg-background">
+    // Container Utama: Full Height & Flex Column agar tidak ada scroll di body utama
+    <main className="flex flex-col h-full w-full bg-background relative overflow-hidden">
       
-      {/* 1. BAGIAN ATAS (FIXED / NON-SCROLL) */}
-      {/* Hanya muncul di tab Home */}
+      {/* --- AREA 1: BAGIAN ATAS (FIXED) --- */}
+      {/* Area ini TIDAK AKAN SCROLL */}
       {activeTab === 'home' && (
-        <div className="shrink-0 z-10 bg-background border-b border-border/0 pb-2">
+        <div className="shrink-0 z-20 bg-background w-full">
           <Header />
           <BudgetCard expense={stats.expense} limit={5000000} />
           
-          {/* Judul List Transaksi (Sticky effect visual) */}
-          <div className="px-6 mt-4 flex justify-between items-end">
-             <h3 className="font-semibold text-white text-base">Recent Transactions</h3>
-             <button className="text-[10px] text-primary hover:underline">View All</button>
+          {/* Judul List (Sticky effect visual) */}
+          <div className="px-6 mt-2 pb-2 flex justify-between items-end border-b border-border/50">
+             <h3 className="font-semibold text-white text-base">Riwayat Transaksi</h3>
+             <button className="text-[10px] text-primary hover:underline">Lihat Semua</button>
           </div>
         </div>
       )}
 
-      {/* 2. BAGIAN BAWAH (SCROLLABLE AREA) */}
-      <div className="flex-1 overflow-y-auto no-scrollbar relative">
+      {/* --- AREA 2: BAGIAN TENGAH (SCROLLABLE) --- */}
+      {/* Area ini MENGISI SISA RUANG (flex-1) dan BISA SCROLL (overflow-y-auto) */}
+      <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-32">
+        
         {activeTab === 'home' && (
           <ActivityList 
             transactions={transactions} 
@@ -69,20 +72,26 @@ export default function Home() {
         )}
 
         {activeTab === 'stats' && (
-          <div className="h-full overflow-y-auto pb-24">
-             {/* Header khusus stats jika perlu, atau gunakan Header umum */}
-             <div className="pt-8"><Header /></div>
+          <div className="pt-8">
+             {/* Header khusus stats jika perlu */}
+             <div className="px-6 mb-4"><h2 className="text-xl font-bold text-white">Analisis</h2></div>
              <SpendingAnalysis transactions={transactions} />
           </div>
         )}
       </div>
 
-      {/* 3. NAVIGATION (FIXED) */}
-      <BottomNav 
-        currentTab={activeTab} 
-        onTabChange={setActiveTab} 
-        onAddClick={() => setIsModalOpen(true)} 
-      />
+      {/* --- AREA 3: BAGIAN BAWAH (FLOATING FIXED) --- */}
+      {/* Navigasi mengambang di atas konten */}
+      <div className="absolute bottom-6 left-0 right-0 z-50 pointer-events-none">
+         {/* Pointer events auto pada child agar tombol bisa diklik tapi area kosong tembus */}
+         <div className="pointer-events-auto">
+            <BottomNav 
+              currentTab={activeTab} 
+              onTabChange={setActiveTab} 
+              onAddClick={() => setIsModalOpen(true)} 
+            />
+         </div>
+      </div>
 
       <AddTransactionModal 
         isOpen={isModalOpen} 
