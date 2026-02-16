@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Transaction, TransactionType } from '@/types/finance';
-import { X } from 'lucide-react';
+import { X, ChevronDown } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;
@@ -12,7 +12,7 @@ interface Props {
 export default function AddTransactionModal({ isOpen, onClose, onSave }: Props) {
   const [amount, setAmount] = useState('');
   const [type, setType] = useState<TransactionType>('expense');
-  const [category, setCategory] = useState('Food');
+  const [category, setCategory] = useState('Makanan');
   const [description, setDescription] = useState('');
 
   if (!isOpen) return null;
@@ -32,75 +32,83 @@ export default function AddTransactionModal({ isOpen, onClose, onSave }: Props) 
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-end sm:items-center justify-center backdrop-blur-sm p-4">
-      <div className="bg-white dark:bg-slate-900 w-full max-w-md rounded-t-3xl sm:rounded-3xl p-6 shadow-2xl animate-in slide-in-from-bottom-10">
+    <div className="absolute inset-0 bg-black/60 z-50 flex items-end backdrop-blur-[2px]">
+      <div className="bg-white w-full rounded-t-[30px] p-6 animate-in slide-in-from-bottom-10 duration-300">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-white">New Transaction</h2>
-          <button onClick={onClose} className="p-2 bg-slate-100 dark:bg-slate-800 rounded-full text-slate-500">
-            <X size={20} />
+          <h2 className="text-xl font-bold text-slate-800">Tambah Transaksi</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-800">
+            Batal
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Toggle Type */}
+          <div className="bg-slate-100 p-1 rounded-xl flex">
+            <button
+              type="button"
+              onClick={() => setType('expense')}
+              className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${
+                type === 'expense' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400'
+              }`}
+            >
+              Pengeluaran
+            </button>
+            <button
+              type="button"
+              onClick={() => setType('income')}
+              className={`flex-1 py-3 rounded-lg text-sm font-bold transition-all ${
+                type === 'income' ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-400'
+              }`}
+            >
+              Pemasukan
+            </button>
+          </div>
+
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1">Amount</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-1">JUMLAH (RP)</label>
             <input 
               type="number" 
               required
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              className="w-full text-3xl font-bold bg-transparent border-b-2 border-slate-200 dark:border-slate-700 focus:border-blue-500 outline-none py-2 text-slate-900 dark:text-white"
+              className="w-full text-4xl font-bold text-slate-800 placeholder-slate-200 outline-none border-b border-slate-100 pb-2 focus:border-[#0d9488] transition-colors"
               placeholder="0"
             />
           </div>
 
-          <div className="flex gap-2">
-            {(['expense', 'income'] as const).map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setType(t)}
-                className={`flex-1 py-3 rounded-xl font-medium text-sm transition-all ${
-                  type === t 
-                    ? (t === 'income' ? 'bg-green-100 text-green-700 ring-2 ring-green-500' : 'bg-red-100 text-red-700 ring-2 ring-red-500')
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-500'
-                }`}
+          <div>
+            <label className="block text-xs font-semibold text-slate-400 mb-2">KATEGORI</label>
+            <div className="relative">
+              <select 
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full bg-slate-50 text-slate-800 rounded-xl p-4 outline-none appearance-none font-medium"
               >
-                {t.charAt(0).toUpperCase() + t.slice(1)}
-              </button>
-            ))}
+                <option>Makanan</option>
+                <option>Sewa</option>
+                <option>Belanja</option>
+                <option>Transport</option>
+                <option>Tagihan</option>
+                <option>Gaji</option>
+                <option>Investasi</option>
+              </select>
+              <ChevronDown className="absolute right-4 top-4 text-slate-400" size={20} />
+            </div>
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1">Category</label>
-            <select 
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              className="w-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl p-3 outline-none"
-            >
-              <option>Food</option>
-              <option>Transport</option>
-              <option>Shopping</option>
-              <option>Entertainment</option>
-              <option>Bills</option>
-              <option>Salary</option>
-              <option>Investment</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-medium text-slate-500 mb-1">Description</label>
+            <label className="block text-xs font-semibold text-slate-400 mb-2">CATATAN (OPSIONAL)</label>
             <input 
               type="text" 
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white rounded-xl p-3 outline-none"
-              placeholder="Lunch, Taxi, etc..."
+              className="w-full bg-slate-50 text-slate-800 rounded-xl p-4 outline-none font-medium"
+              placeholder="Contoh: Makan siang"
             />
           </div>
 
-          <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl mt-4">
-            Save Transaction
+          <button type="submit" className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl mt-4 hover:bg-slate-800 active:scale-[0.98] transition-all">
+            Simpan
           </button>
         </form>
       </div>
