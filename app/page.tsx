@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import Header from '@/components/Header';
 import BudgetCard from '@/components/BudgetCard';
 import ActivityList from '@/components/ActivityList';
-import SpendingAnalysis from '@/components/SpendingAnalysis'; // Import baru
+import SpendingAnalysis from '@/components/SpendingAnalysis';
 import AddTransactionModal from '@/components/AddTransactionModal';
 import BottomNav from '@/components/BottomNav';
 import { Transaction } from '@/types/finance';
@@ -24,7 +24,6 @@ export default function Home() {
     loadData();
   }, []);
 
-  // Hitung total saldo
   const stats = useMemo(() => {
     const income = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
     const expense = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
@@ -44,16 +43,15 @@ export default function Home() {
   };
 
   return (
-    <main className="flex-1 overflow-y-auto no-scrollbar bg-white relative h-full">
+    <main className="flex-1 overflow-y-auto no-scrollbar relative h-full bg-[#0B0F19]">
       
-      {/* --- HALAMAN UTAMA (HOME) --- */}
       {activeTab === 'home' && (
         <div className="animate-in fade-in duration-300 pb-24">
           <Header />
           
           <div className="px-6 mb-4">
-            <p className="text-slate-500 text-sm font-medium">Saldo Saat Ini</p>
-            <h1 className="text-4xl font-extrabold text-slate-900 mt-1">{formatCurrency(stats.total)}</h1>
+            <p className="text-slate-400 text-xs font-bold tracking-widest uppercase mb-1">Total Saldo</p>
+            <h1 className="text-4xl font-extrabold text-white tracking-tight">{formatCurrency(stats.total)}</h1>
           </div>
 
           <BudgetCard expense={stats.expense} limit={5000000} />
@@ -65,17 +63,15 @@ export default function Home() {
         </div>
       )}
 
-      {/* --- HALAMAN STATISTIK (Spending Analysis) --- */}
       {activeTab === 'stats' && (
         <SpendingAnalysis transactions={transactions} />
       )}
 
-      {/* FOOTER CREDIT (Fixed at bottom behind content if scrolled) */}
-      <div className="w-full text-center py-4 text-[10px] text-slate-300 absolute bottom-20 left-0 right-0 pointer-events-none">
-        Developer <span className="font-bold">SANN404 FORUM</span>
+      {/* Credit Footer */}
+      <div className="w-full text-center py-4 text-[10px] text-slate-600 absolute bottom-0 left-0 right-0 pointer-events-none z-0">
+        Engineered by <span className="font-bold text-slate-500">SANN404 FORUM</span>
       </div>
 
-      {/* NAVIGATION BAR */}
       <BottomNav 
         currentTab={activeTab} 
         onTabChange={setActiveTab} 
