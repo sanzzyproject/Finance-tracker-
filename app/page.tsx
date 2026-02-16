@@ -4,100 +4,204 @@ import Header from '@/components/Header';
 import BudgetCard from '@/components/BudgetCard';
 import ActivityList from '@/components/ActivityList';
 import SpendingAnalysis from '@/components/SpendingAnalysis';
-import AddTransactionModal from '@/components/AddTransactionModal';
 import BottomNav from '@/components/BottomNav';
-import { Transaction } from '@/types/finance';
-import { addTransaction, getTransactions, deleteTransaction } from '@/lib/db';
+
+// Modals Transaksi
+import AddTransactionModal from '@/components/AddTransactionModal';
+
+// --- KOMPONEN & TIPE BARU ---
+import { Transaction, WishlistItem } from '@/types/finance';
+import { 
+  addTransaction, getTransactions, deleteTransaction,
+  getWishlists, addWishlist, updateWishlist, deleteWishlist
+} from '@/lib/db';
+import WishlistCard from '@/components/Wishlist/WishlistCard';
+import AddWishlistModal from '@/components/Wishlist/AddWishlistModal';
+import WishlistDetailModal from '@/components/Wishlist/WishlistDetailModal';
+import { Target, Plus } from 'lucide-react';
 
 export default function Home() {
+  // State Transaksi
   const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTxModalOpen, setIsTxModalOpen] = useState(false);
+
+  // State Wishlist
+  const [wishlists, setWishlists] = useState<WishlistItem[]>([]);
+  const [isAddWishlistModalOpen, setIsAddWishlistModalOpen] = useState(false);
+  const [selectedWishlist, setSelectedWishlist] = useState<WishlistItem | null>(null);
+
+  // State UI
   const [activeTab, setActiveTab] = useState('home'); 
 
+  // Load semua data (Transaksi & Wishlist)
   const loadData = async () => {
-    const data = await getTransactions();
-    setTransactions(data.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+    const txData = await getTransactions();
+    setTransactions(txData.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()));
+    
+    const wishData = await getWishlists();
+    setWishlists(wishData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
   };
 
   useEffect(() => {
     loadData();
   }, []);
 
+  // Memo untuk statistik (tidak berubah)
   const stats = useMemo(() => {
     const income = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
     const expense = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
     return { income, expense, total: income - expense };
   }, [transactions]);
 
-  const handleAdd = async (tx: Transaction) => {
+  // --- HANDLERS TRANSAKSI ---
+  const handleAddTransaction = async (tx: Transaction) => {
     await addTransaction(tx);
     await loadData();
   };
-
-  const handleDelete = async (id: number) => {
+  const handleDeleteTransaction = async (id: number) => {
     if (confirm('Hapus transaksi ini?')) {
       await deleteTransaction(id);
       await loadData();
     }
   };
 
+  // --- HANDLERS WISHLIST ---
+  const handleAddWishlist = async (item: WishlistItem) => {
+    await addWishlist(item);
+    await loadData();
+  };
+  const handleUpdateWishlist = async (item: WishlistItem) => {
+    await updateWishlist(item);
+    await loadData();
+    setSelectedWishlist(item); // Update data di modal detail yang sedang terbuka
+  };
+  const handleDeleteWishlist = async (id: number) => {
+    await deleteWishlist(id);
+    await loadData();
+    setSelectedWishlist(null); // Tutup modal detail
+  };
+
+  // --- LOGIC TOMBOL TENGAH (+) ---
+  const handleAddClick = () => {
+    // Buka modal sesuai tab yang aktif
+    if (activeTab === 'wishlist') {
+        setIsAddWishlistModalOpen(true);
+    } else {
+        // Default ke tambah transaksi untuk tab Home dan Stats
+        setIsTxModalOpen(true);
+    }
+  };
+
   return (
-    // Container Utama: Full Height & Flex Column agar tidak ada scroll di body utama
     <main className="flex flex-col h-full w-full bg-background relative overflow-hidden">
       
-      {/* --- AREA 1: BAGIAN ATAS (FIXED) --- */}
-      {/* Area ini TIDAK AKAN SCROLL */}
+      {/* --- AREA 1: FIXED HEADER --- */}
+      
+      {/* Header Home */}
       {activeTab === 'home' && (
         <div className="shrink-0 z-20 bg-background w-full">
           <Header />
           <BudgetCard expense={stats.expense} limit={5000000} />
-          
-          {/* Judul List (Sticky effect visual) */}
           <div className="px-6 mt-2 pb-2 flex justify-between items-end border-b border-border/50">
              <h3 className="font-semibold text-white text-base">Riwayat Transaksi</h3>
-             <button className="text-[10px] text-primary hover:underline">Lihat Semua</button>
+             <button className="text-[10px] text-primary hover:underline tracking-wide uppercase">Lihat Semua</button>
           </div>
         </div>
       )}
 
-      {/* --- AREA 2: BAGIAN TENGAH (SCROLLABLE) --- */}
-      {/* Area ini MENGISI SISA RUANG (flex-1) dan BISA SCROLL (overflow-y-auto) */}
-      <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-32">
+      {/* Header Tab Lain (Wishlist & Stats) */}
+      {activeTab !== 'home' && (
+        <div className="shrink-0 z-20 bg-background w-full pt-10 px-6 pb-6 border-b border-border/30">
+            <div className="flex items-center gap-3">
+                {activeTab === 'wishlist' && <Target className="text-primary" size={28} />}
+                <h2 className="text-3xl font-extrabold text-white tracking-tight">
+                    {activeTab === 'wishlist' ? 'Target Tabungan' : 'Analisis Keuangan'}
+                </h2>
+            </div>
+             {activeTab === 'wishlist' && <p className="text-zinc-400 text-sm mt-1 font-medium">Wujudkan impianmu satu per satu.</p>}
+        </div>
+      )}
+
+
+      {/* --- AREA 2: SCROLLABLE CONTENT --- */}
+      <div className="flex-1 overflow-y-auto no-scrollbar w-full pb-36 relative">
         
+        {/* KONTEN TAB HOME */}
         {activeTab === 'home' && (
-          <ActivityList 
-            transactions={transactions} 
-            onDelete={handleDelete} 
-          />
+          <ActivityList transactions={transactions} onDelete={handleDeleteTransaction} />
         )}
 
-        {activeTab === 'stats' && (
-          <div className="pt-8">
-             {/* Header khusus stats jika perlu */}
-             <div className="px-6 mb-4"><h2 className="text-xl font-bold text-white">Analisis</h2></div>
-             <SpendingAnalysis transactions={transactions} />
+        {/* KONTEN TAB WISHLIST (BARU) */}
+        {activeTab === 'wishlist' && (
+          <div className="px-6 py-4 space-y-4 min-h-full">
+             {wishlists.length === 0 ? (
+                // State Kosong
+                <div className="flex flex-col items-center justify-center py-20 text-center opacity-60 mt-10 border-2 border-dashed border-zinc-800 rounded-3xl">
+                   <div className="w-20 h-20 bg-zinc-900 rounded-full flex items-center justify-center mb-4 border border-zinc-800">
+                       <Target size={40} className="text-zinc-700" />
+                   </div>
+                   <h3 className="text-white font-bold text-lg mb-2">Belum Ada Target</h3>
+                   <p className="text-zinc-500 text-sm max-w-[200px] leading-relaxed">Tekan tombol + di bawah untuk mulai membuat target impianmu.</p>
+                </div>
+             ) : (
+                // Daftar Kartu Wishlist
+                <>
+                    {wishlists.map(item => (
+                    <WishlistCard 
+                        key={item.id} 
+                        item={item} 
+                        onClick={() => setSelectedWishlist(item)} // Buka modal detail
+                    />
+                    ))}
+                    {/* Tombol Tambah di bawah list (opsional, sebagai alternatif tombol tengah) */}
+                    <button 
+                        onClick={() => setIsAddWishlistModalOpen(true)} 
+                        className="w-full py-4 rounded-[24px] border-2 border-dashed border-zinc-800 text-zinc-500 text-sm font-bold hover:bg-white/5 hover:text-primary hover:border-primary/30 transition-all flex items-center justify-center gap-2 uppercase tracking-widest group mt-4"
+                    >
+                        <Plus size={18} className="group-hover:scale-110 transition-transform"/> Buat Target Baru
+                    </button>
+                </>
+             )}
           </div>
         )}
+
+        {/* KONTEN TAB STATS */}
+        {activeTab === 'stats' && (
+          <SpendingAnalysis transactions={transactions} />
+        )}
       </div>
 
-      {/* --- AREA 3: BAGIAN BAWAH (FLOATING FIXED) --- */}
-      {/* Navigasi mengambang di atas konten */}
-      <div className="absolute bottom-6 left-0 right-0 z-50 pointer-events-none">
-         {/* Pointer events auto pada child agar tombol bisa diklik tapi area kosong tembus */}
-         <div className="pointer-events-auto">
-            <BottomNav 
-              currentTab={activeTab} 
-              onTabChange={setActiveTab} 
-              onAddClick={() => setIsModalOpen(true)} 
-            />
-         </div>
-      </div>
-
-      <AddTransactionModal 
-        isOpen={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSave={handleAdd} 
+      {/* --- AREA 3: BOTTOM NAV --- */}
+      <BottomNav 
+        currentTab={activeTab} 
+        onTabChange={setActiveTab} 
+        onAddClick={handleAddClick} // Fungsi add dinamis
       />
+
+      {/* --- SEMUA MODAL DI SINI --- */}
+      
+      {/* 1. Modal Tambah Transaksi */}
+      <AddTransactionModal 
+        isOpen={isTxModalOpen} 
+        onClose={() => setIsTxModalOpen(false)} 
+        onSave={handleAddTransaction} 
+      />
+      
+      {/* 2. Modal Tambah Wishlist Baru */}
+      <AddWishlistModal
+         isOpen={isAddWishlistModalOpen}
+         onClose={() => setIsAddWishlistModalOpen(false)}
+         onSave={handleAddWishlist}
+      />
+
+      {/* 3. Modal Detail Wishlist */}
+      <WishlistDetailModal 
+         item={selectedWishlist}
+         onClose={() => setSelectedWishlist(null)}
+         onUpdate={handleUpdateWishlist}
+         onDelete={handleDeleteWishlist}
+      />
+
     </main>
   );
 }
