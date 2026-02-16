@@ -7,7 +7,7 @@ export default function Header() {
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full overflow-hidden border border-white/10 relative">
           <Image 
-            src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&h=100" 
+            src="ae37854e0fddd035f48e05e5a0b63a37.jpg" 
             alt="Profile" 
             fill
             className="object-cover"
