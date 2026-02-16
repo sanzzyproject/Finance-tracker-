@@ -24,7 +24,7 @@ export default function ProfilePage() {
         <div className="relative">
           <div className="w-28 h-28 rounded-full border-2 border-zinc-800 overflow-hidden relative">
              <img 
-               src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=300&h=300" 
+               src="ae37854e0fddd035f48e05e5a0b63a37.jpg" 
                alt="Profile"
                className="w-full h-full object-cover"
              />
@@ -35,8 +35,8 @@ export default function ProfilePage() {
           </button>
         </div>
         
-        <h2 className="text-2xl font-bold text-white mt-4">Alex Sander</h2>
-        <p className="text-zinc-500 text-sm font-medium mb-1">UI/UX Designer</p>
+        <h2 className="text-2xl font-bold text-white mt-4">SANNNDEC5TY</h2>
+        <p className="text-zinc-500 text-sm font-medium mb-1">Full Stack Developer</p>
         <button className="text-primary text-xs font-bold hover:underline">
           + Add Status
         </button>
