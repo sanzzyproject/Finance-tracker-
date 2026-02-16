@@ -78,7 +78,7 @@ export default function ProfilePage() {
                 </div>
                 <div className="flex-1 overflow-hidden">
                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Email</p>
-                   <p className="text-sm text-white font-medium truncate">alex.sander@gmail.com</p>
+                   <p className="text-sm text-white font-medium truncate">sannnforums@gmail.com</p>
                 </div>
              </div>
 
@@ -100,7 +100,7 @@ export default function ProfilePage() {
                 </div>
                 <div>
                    <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-0.5">Website</p>
-                   <p className="text-sm text-white font-medium">alexsander.design</p>
+                   <p className="text-sm text-white font-medium">sannforums.design</p>
                 </div>
              </div>
 
