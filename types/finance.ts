@@ -9,8 +9,12 @@ export interface Transaction {
   date: string; // ISO String
 }
 
-export interface MonthlyStats {
-  income: number;
-  expense: number;
-  balance: number;
+// --- TAMBAHAN BARU: Tipe Data Wishlist ---
+export interface WishlistItem {
+  id?: number;
+  name: string;
+  targetAmount: number;
+  currentAmount: number;
+  imageUrl?: string; // Menyimpan foto dalam format Base64 string
+  createdAt: string;
 }
