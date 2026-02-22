@@ -47,7 +47,6 @@ finance-tracker/
 │   └── ...                   # Komponen utama (Header, Nav, Charts)
 ├── lib/                      # Konfigurasi Database IndexedDB & Helper Fungsi
 ├── public/                   # File Statis & Manifest PWA
-├── types/                    # Definisi Interface & Tipe TypeScript
-├── next.config.mjs           # Konfigurasi Next.js
+├── types/                    # Definisi Interface & Tipe TypeScript 
 └── tailwind.config.ts        # Setup Tema Warna (Matte Black & Lime)
 
